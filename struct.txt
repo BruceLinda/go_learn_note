@@ -1,0 +1,83 @@
+struct的声明格式：
+var myStruct struct{
+    field1 string
+    field2 string
+}
+
+类型定义
+type myType struct{
+    //field here
+}
+格式为
+type 类型命名 底层类型
+
+.符号用在结构体指针和结构体上的效果是一样的。
+这是因为.的运算等级比*的运算等级高，为了书写简便，go做了处理
+*pointer.field的处理为*(pointer.field),会把field认为是一个指针
+
+一个定义的类型如果需要导出，则必须首字母大写
+结构体中的field如果需要导出，也是必须首字母大写
+
+struct literals的形式
+myCar := car{Name:"Carverre",topspeed:337}
+其中car为定义的结构体类型，Name和topspeed为结构的field
+
+访问结构体中的结构体的方法
+    1、通过结构体链访问
+    2、匿名fields
+        type Subscriber struct{
+            Name string
+            Rate float64
+            Active bool
+            Address
+        }
+其中Address是另一个结构体类型，没有写此结构体所对应的field。这种形式嵌入结构体(embedded)
+这样就可以直接访问嵌入结构体中的field，而不需要写Address了。如Address中有field City
+则可以直接访问SubcriberVar.City
+
+
+go定义大部分的类型以struct为基础，但是也可以以int,string,boolen,和其他的基础类型为基础。
+
+可以使用一个底层的值赋值给一个定义的类型
+但是不可以使用另外一个类型的值赋给它，即使他们底层的基础类型是一样的。
+如
+    type Liters float64
+    type Gallons float64
+
+    var carfuel Gallons
+    var busFuel Liters
+
+    carfuel = 10.0 //这是可以的
+    carFuel = Liters(24.0)//这是不可以的，即使它们的底层是一样的。
+    carfuel = Gallons(Liters(24.0))//这样经过转换之后则是可以的。
+
+
+定义的类型支持底层类型所有的操作，也可以和底层的类型一起运算
+但是不能和不同类型的混合运算，即使它们的底层的类型是一样的
+
+go是不支持函数重载的。
+
+go不允许在同一个包中存在两个同名的函数，但是可以有两个同名的方法，只要它们是不同的类型。
+
+定义方法的形式
+    func (m MyType) sayHi(){
+}
+上面括号中的(m MyType)表示接收者的参数。
+习惯上，接收者参数的命名是以接收参数的类型的小写字母
+go中的接收参数和其他语言中的this 和self类似
+方法只能和相应的类型定义在同一个包中
+不能定义基础类型如int和string的方法
+
+当一个方法的接收者参数为指针类型时，而调用的时候如果是值，go将自动的转换为指针类型
+同理
+当一个方法的接收者参数为值类型时，而调用的时候如果是指针，go将自动将其转换为值类型
+
+上面的自动将值转换为指针的做法需要能获取值的地址，也就是需要又变量。如
+    MyType("a value").pointerMethod() //这种会失败
+
+    value := MyType("a value")
+    value.pointerMethod()   //这种则可以
+
+按照惯例，一个类型的方法的接收者参数可以都是指针，或者都是值但不要两个混用
+
+

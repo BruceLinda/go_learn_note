@@ -1,0 +1,29 @@
+map就是python中字典
+map中的key必须是同一个类型
+map中的value也必须是同一个类型
+key可以使用所有类型，只要key可以比较
+map的声明格式
+    var myMap map[string]float
+var map的名字 map[key的类型]值的类型
+
+声明一个map类型也不会自动创建map,可以使用内置函数make创建
+map创建的几种形式：
+    1、var ranks map[string]int
+       ranks = make(map[string]int)
+    2、ranks := make(map[string]int)
+    3、mymap := map[string]float64{"a":1.2, "b":5.6}
+
+如果访问map时key不存在，则返回0值
+为了区分key存在时值为0,和key不存在时返回0的情况，访问map时，还会返回可选的第二个参数，bool类型
+如
+    value,ok := counter["a"]
+    当counter存在key为a的值时，ok为true值，否则返回false
+
+删除map中的一个键值对时，可以使用内置delete函数，
+    delete(mapname,keyname)
+
+map也可以使用for...range的形式，如
+    for key,value := range myMap{
+}
+但是这种形式的key,value形式是无序的状态。
+

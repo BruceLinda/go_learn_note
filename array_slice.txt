@@ -1,0 +1,44 @@
+可以使用len获取数组的长度len(arrayName)
+另外一种安全的遍历数组的方法是：
+    for index,value := range arrayName{
+        //loop block here
+}
+
+读取文本文件的内容的方式：
+    1、打开文件file,err := os.Open("filename")
+    2、读取文件scanner := bufio.NewScanner(file)
+    3、scanner.Scan方法用于for循环中，读取到结尾的时候返回false
+    4、scanner.Text方法返回读取的字符串
+    5、关闭文件 err := file.Close()
+
+声明slice和array的区别
+    var myslice []string
+    var myarray [5]string
+声明slice之后并不会创建一个slice,需要使用内置函数make
+    var notes []string
+    notes = make([]string, 7) //7是slice的长度
+也可以直接将上两步合为1步
+    note := make([]string, 7)
+也可以直接在声明的时候就赋值
+    notes := []string{"do", "re", "mi","fa","so","la","ti")//这样将省略调用make
+
+slice的底层是array,alice是array部分元素的view
+
+我们可以手动创建slice
+    myslice := myarray(1:3)
+
+内置函数append可以在slice的尾部添加元素，一般情况下，应该将append再赋值给入参的slice
+
+os.Args会获取命令行的参数，os.Args是一个slice,第一个元素为执行的命令
+
+变参函数的声明:
+func myFunc(paran1 int, param2 ...string)
+变参需要在最后一个参数的类型前面加上...,最后一个参数接收变参为一个slice
+虽然变参的参数可以省略，但是非变参的参数在调用的时候是一定要传入的
+
+math.Inf表示的无穷小的数
+
+如果将一个slice作为实参传入到接收变参的参数中，需要在slice后面添加...。
+
+
+
