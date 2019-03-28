@@ -1,0 +1,32 @@
+unexported variables ,struct fields, functions, and methods can still be accessed by exported functions and methods in the same package
+
+习惯上， a getter method's name should be the same as the name of the field or variable it accessed
+
+The practice of hiding data in one part of a programe from code in another part is known as encapsulation(封装)
+
+如果结构体中嵌入的类型的方法是可以导出的，则这个方法will be promoted to the outer type
+
+An Interface is a set of methods that certain values are expected to have
+
+Interface的定义
+type myInterface interface {
+    method1()
+    method2()
+    method3()
+}
+
+任何实现了interface方法的类型都可以被使用anywhere that interface is called for
+
+一般的类型是具体类型
+接口是抽象类型
+
+Once you assign a value to a variable (or method parameter ) with an interface type,you can only call methods that are specified by the interace on it
+
+If a type declare methods with pointer receivers, then you'll only be able to use pointers to that type when assigning to interface variables
+
+a type assertion lets you get the concrete typeback 。
+语法如下：
+    var robot Robot = noicemaker.(Robot)
+其中noicemaker为接口类型值，Robot为实现接口类型的具体的类型。
+
+interface{} is 空接口，用于接收任何类型的值。
