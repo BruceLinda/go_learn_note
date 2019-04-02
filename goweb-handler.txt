@@ -1,0 +1,71 @@
+Go创建一个HTTP服务的方式：
+1、http.ListenAndServe("",nil)
+func ListenAndServe(addr string, handler Handler) error
+addr为监听的地址
+Handler的定义为：
+type Handler interface{
+    ServeHTTP(ResponseWriter, *Request)
+}
+Handler的默认值是DefaultServeMux
+
+2、提供一个可供配置参数的方式
+server := http.Server{
+    Addr: "127.0.0.1:8080",
+    Handler: nil
+}
+server.ListenAndServe()
+
+Server结构体的定义为:
+type Server struct {
+    Addr string
+    Handler Handler
+    ReadTimeout time.Duration
+    WriteTimeout time.Duration
+    MaxHeaderBytes int
+    TLSConfig   *tls.Config
+    TLSNextProto map[string]func(*Server, *tls.Conn, Handler)
+    ConnState   func(net.Conn, ConnState)
+    ErrorLog    *log.Logger
+}
+
+DefaultServeMux 是ServeMux的一个实例, ServerMux是一个结构体，实现了ServerHTTP,
+所以它也是一个Handler
+
+
+为了接收和处理不同的URL,我们不在Server结构体的Handler字段明确指定某一个Handler.
+我们用http.Handle函数来绑定Handler到DefaultServerMux.
+http函数的参数为：
+    func Handle(pattern string, handler Handler)
+一个注意的情况：一些函数如Handle既是http包的函数，也是ServerMux的方法。
+实现多个URL的处理的实例
+HelloHandler和WorldHanler结构体，实现了ServerHTTP
+hello := HelloHandler{}
+world := WorldHandler{}
+...
+http.Handle("/hello", &hello)
+http.Handle("/world", &world)
+
+
+Hanler函数是行为像Handler的函数，Handler函数的签名和ServerHTTP一样
+func hello(w http.ResponseWriter, r *http.Request){
+    ...
+}
+func world(w http.ResponseWriter, r *http.Request) {
+...
+}
+http.HandleFunc("hello", hello)
+http.HandleFunc("world", world)
+可以实现和上面一样的功能
+
+HandleFunc的签名如下：
+func HandleFunc(pattern string, handler func(ResponseWriter, *Request))
+
+HandleFunc的源代码如下：
+func (mux *ServeMux) HandleFunc(pattern string, handler func(ResponseWriter,*Request)) {
+    mux.Handle(pattern, HandlerFunc(handler))
+}
+
+Go的函数链和python中的修饰器类似
+
+
+

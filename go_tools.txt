@@ -1,0 +1,14 @@
+go get可以用于获取URL类型的包及其依赖
+
+命名import示例
+
+import (
+    "fmt"
+    myfmt "mylib/fmt"
+)
+
+func main(){
+    fmt.Println("standard library")
+    myfmt.Println("mylib/fmt")
+}
+

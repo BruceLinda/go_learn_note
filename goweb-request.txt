@@ -1,0 +1,99 @@
+Request是一个结构体，具体如下：
+type Request struct {
+	Method string
+	URL *url.URL
+	Header Header
+	Body io.ReadCloser
+	GetBody func() (io.ReadCloser, error)
+	ContentLength int64
+	TransferEncoding []string
+	Close bool
+	Host string
+	Form url.Values
+	PostForm url.Values
+	MultipartForm *multipart.Form
+	Trailer Header
+	RemoteAddr string
+	RequestURI string
+	TLS *tls.ConnectionState
+	Cancel <-chan struct{}
+	Response *Response
+}
+
+其中的URL也是一个结构体，定义如下:
+type URL struct {
+	Scheme     string
+	Opaque     string    // encoded opaque data
+	User       *Userinfo // username and password information
+	Host       string    // host or host:port
+	Path       string    // path (relative paths may omit leading slash)
+	RawPath    string    // encoded path hint (see EscapedPath method)
+	ForceQuery bool      // append a query ('?') even if RawQuery is empty
+	RawQuery   string    // encoded query values, without '?'
+	Fragment   string    // fragment for references, without '#'
+}
+
+Header是一个字典，定义如下：
+type Header map[string][]string。
+
+Body是一个接口，接口的定义如下:
+type ReadCloser interface {
+	Reader
+	Closer
+}
+
+type Reader interface {
+	Read(p []byte) (n int, err error)
+}
+
+type Closer interface {
+	Close() error
+}
+
+ReadCloser接口包含的是两个接口
+
+当数据通过POST请求时，数据是放在body内，格式有三种，通过enctype指定
+1、application/x-www-form-urlencoded默认形式
+2、multipart/form-data
+3、text/plain
+
+从URL或者Body提去数据时，Request提供了方法
+1、ParseForm,这种会获取URL和form中的值
+2、PostForm，只会得到Form中的值
+3、ParseMultipartForm
+4、FormValue
+5、PostFormValue
+
+
+
+type ResponseWriter interface {
+	Header() Header
+	Write([]byte) (int, error)
+	WriteHeader(statusCode int)
+}
+http响应的接口如上所示
+
+
+
+http的Cookie结构体
+type Cookie struct {
+	Name  string
+	Value string
+
+	Path       string    // optional
+	Domain     string    // optional
+	Expires    time.Time // optional
+	RawExpires string    // for reading cookies only
+
+	// MaxAge=0 means no 'Max-Age' attribute specified.
+	// MaxAge<0 means delete cookie now, equivalently 'Max-Age: 0'
+	// MaxAge>0 means Max-Age attribute present and given in seconds
+	MaxAge   int
+	Secure   bool
+	HttpOnly bool
+	SameSite SameSite
+	Raw      string
+	Unparsed []string // Raw text of unparsed attribute-value pairs
+}
+
+
